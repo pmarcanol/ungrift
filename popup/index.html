@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ungrift settings</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header>
+      <img src="../icons/icon128.png" alt="" width="32" height="32" />
+      <div>
+        <h1>Ungrift</h1>
+        <p>Timeline settings</p>
+      </div>
+    </header>
+
+    <main>
+      <section aria-labelledby="filter-heading">
+        <div class="section-heading">
+          <h2 id="filter-heading">Hidden categories</h2>
+          <span id="hidden-count">0 hidden</span>
+        </div>
+        <p class="section-copy">Choose which classified posts to remove from your timeline.</p>
+
+        <div class="category-list">
+          <label class="category" data-category="grift">
+            <span class="category-copy"><strong>Grift</strong><small>Manipulative attention, influence, or profit</small></span>
+            <input type="checkbox" value="grift" />
+            <span class="switch" aria-hidden="true"><span></span></span>
+          </label>
+          <label class="category" data-category="good_intent">
+            <span class="category-copy"><strong>Good intent</strong><small>Sincere contribution without deceptive tactics</small></span>
+            <input type="checkbox" value="good_intent" />
+            <span class="switch" aria-hidden="true"><span></span></span>
+          </label>
+          <label class="category" data-category="unclear">
+            <span class="category-copy"><strong>Unclear</strong><small>Not enough context for a responsible verdict</small></span>
+            <input type="checkbox" value="unclear" />
+            <span class="switch" aria-hidden="true"><span></span></span>
+          </label>
+        </div>
+        <button id="show-all-categories" class="text-button" type="button">Show all categories</button>
+      </section>
+
+      <section class="key-section" aria-labelledby="key-heading">
+        <h2 id="key-heading">Classifier</h2>
+        <p class="section-copy">Your Jev key is stored only in this Chrome profile.</p>
+        <form id="key-form">
+          <label for="api-key">API key</label>
+          <div class="input-row">
+            <input id="api-key" type="password" autocomplete="off" spellcheck="false" placeholder="apikey_…" required />
+            <button type="submit">Save</button>
+          </div>
+          <div class="key-meta">
+            <p id="key-status" role="status">Checking key…</p>
+            <div class="key-actions">
+              <button id="retry-classification" class="text-button" type="button">Retry</button>
+              <button id="remove-key" class="text-button" type="button">Remove</button>
+            </div>
+          </div>
+        </form>
+      </section>
+    </main>
+
+    <script src="popup.js"></script>
+  </body>
+</html>
