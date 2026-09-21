@@ -7,6 +7,7 @@
   ]);
   const ROOT_ATTRIBUTE = "data-ungrift-anonymize-posters";
   const NAME_CLASS = "ungrift-private-name";
+  const HANDLE_CLASS = "ungrift-private-handle";
   const AVATAR_CLASS = "ungrift-private-avatar";
   const AVATAR_SHELL_CLASS = "ungrift-private-avatar-shell";
   let enabled = false;
@@ -57,6 +58,23 @@
     return false;
   }
 
+  function markHandleWithin(container) {
+    if (!container) return false;
+    const elements = [container, ...container.querySelectorAll("a, span, div")];
+
+    for (const element of elements) {
+      const handle = directText(element);
+      if (!/^@[A-Za-z0-9_]{1,15}$/.test(handle)) continue;
+
+      element.classList.add(HANDLE_CLASS);
+      element.dataset.ungriftAnonymizedHandle = "@•••";
+      element.style.setProperty("--ungrift-private-handle-color", getComputedStyle(element).color);
+      return true;
+    }
+
+    return false;
+  }
+
   function markAvatar(image) {
     if (!image) return;
     image.classList.add(AVATAR_CLASS);
@@ -76,6 +94,7 @@
       return text && !text.includes("@") && !link.getAttribute("href")?.includes("/status/");
     });
     markNameWithin(profileLink || nameBlock);
+    markHandleWithin(nameBlock);
   }
 
   function scanLinkedInPost(post) {
@@ -134,19 +153,27 @@
     const style = document.createElement("style");
     style.id = "ungrift-privacy-styles";
     style.textContent = `
-      html[${ROOT_ATTRIBUTE}] .${NAME_CLASS} {
+      html[${ROOT_ATTRIBUTE}] .${NAME_CLASS},
+      html[${ROOT_ATTRIBUTE}] .${HANDLE_CLASS} {
         position: relative !important;
         color: transparent !important;
         text-shadow: none !important;
       }
-      html[${ROOT_ATTRIBUTE}] .${NAME_CLASS}::after {
-        content: attr(data-ungrift-anonymized-name);
+      html[${ROOT_ATTRIBUTE}] .${NAME_CLASS}::after,
+      html[${ROOT_ATTRIBUTE}] .${HANDLE_CLASS}::after {
         position: absolute;
         inset-block-start: 0;
         inset-inline-start: 0;
-        color: var(--ungrift-private-name-color, currentColor) !important;
         white-space: nowrap;
         pointer-events: none;
+      }
+      html[${ROOT_ATTRIBUTE}] .${NAME_CLASS}::after {
+        content: attr(data-ungrift-anonymized-name);
+        color: var(--ungrift-private-name-color, currentColor) !important;
+      }
+      html[${ROOT_ATTRIBUTE}] .${HANDLE_CLASS}::after {
+        content: attr(data-ungrift-anonymized-handle);
+        color: var(--ungrift-private-handle-color, currentColor) !important;
       }
       html[${ROOT_ATTRIBUTE}] .${AVATAR_SHELL_CLASS} {
         overflow: hidden !important;

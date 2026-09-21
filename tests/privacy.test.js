@@ -101,6 +101,11 @@ for (const variant of [
     await page.settle();
     const name = page.document.querySelector(".ungrift-private-name");
     assert.equal(name?.dataset.ungriftAnonymizedName, "Ada •••");
+    if (variant.name === "X") {
+      const handle = page.document.querySelector(".ungrift-private-handle");
+      assert.equal(handle?.dataset.ungriftAnonymizedHandle, "@•••");
+      assert.equal(handle.textContent, "@ada", "The source handle stays in the DOM");
+    }
     assert.ok(page.document.querySelector("img").classList.contains("ungrift-private-avatar"));
     assert.ok(page.document.documentElement.hasAttribute("data-ungrift-anonymize-posters"));
     page.disable();

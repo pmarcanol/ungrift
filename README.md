@@ -40,7 +40,7 @@ Filter choices persist and are broadcast to every open X and LinkedIn tab. Match
 
 ### Recording privacy
 
-Switch on **Anonymize posters** to show only each poster's first name and replace profile photos with a neutral silhouette on X and LinkedIn. The effect is purely presentational: switching it off restores the original page immediately, and Ungrift does not rewrite post data or images at the source. The preference is stored only in the current Chrome profile and is applied to open social tabs without a reload.
+Switch on **Anonymize posters** to show only each poster's first name, replace X handles with a neutral placeholder, and replace profile photos with a neutral silhouette on X and LinkedIn. The effect is purely presentational: switching it off restores the original page immediately, and Ungrift does not rewrite post data or images at the source. The preference is stored only in the current Chrome profile and is applied to open social tabs without a reload.
 
 ## How it works
 

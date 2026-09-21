@@ -1,6 +1,6 @@
 {
   "name": "ungrift",
-  "version": "0.9.0",
+  "version": "0.9.1",
   "private": true,
   "description": "Ungrift classifies X and LinkedIn posts and adds visual recording privacy.",
   "scripts": {
