@@ -47,7 +47,9 @@ section + section { margin-top: 22px; padding-top: 20px; border-top: 1px solid v
 }
 
 h2 { margin: 0; font-size: 14px; line-height: 1.2; }
-#hidden-count { color: var(--muted); font-size: 10px; }
+#hidden-count,
+#privacy-status { color: var(--muted); font-size: 10px; }
+#privacy-status[data-enabled="true"] { color: var(--accent); }
 .section-copy { margin: 6px 0 12px; color: var(--muted); font-size: 11px; line-height: 1.45; }
 
 .category-list {

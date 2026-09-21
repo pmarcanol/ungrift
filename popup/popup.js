@@ -9,6 +9,8 @@ const apiKeyInput = document.querySelector("#api-key");
 const keyStatus = document.querySelector("#key-status");
 const removeKeyButton = document.querySelector("#remove-key");
 const retryButton = document.querySelector("#retry-classification");
+const anonymizePostersInput = document.querySelector("#anonymize-posters");
+const privacyStatus = document.querySelector("#privacy-status");
 let hasSavedKey = false;
 
 function renderHiddenCategories(categories) {
@@ -23,6 +25,19 @@ async function saveHiddenCategories() {
   const categories = categoryInputs.filter((input) => input.checked).map((input) => input.value);
   renderHiddenCategories(categories);
   await chrome.storage.local.set({ hiddenTweetCategories: categories });
+}
+
+function renderPrivacy(enabled) {
+  const isEnabled = enabled === true;
+  anonymizePostersInput.checked = isEnabled;
+  privacyStatus.dataset.enabled = String(isEnabled);
+  privacyStatus.textContent = isEnabled ? "On" : "Off";
+}
+
+async function savePrivacy() {
+  const enabled = anonymizePostersInput.checked;
+  renderPrivacy(enabled);
+  await chrome.storage.local.set({ anonymizeSocialPosters: enabled });
 }
 
 function showKeyState(saved, message) {
@@ -42,6 +57,7 @@ async function retryOpenTimelines() {
 }
 
 for (const input of categoryInputs) input.addEventListener("change", () => void saveHiddenCategories());
+anonymizePostersInput.addEventListener("change", () => void savePrivacy());
 
 showAllButton.addEventListener("click", () => {
   for (const input of categoryInputs) input.checked = false;
@@ -90,13 +106,18 @@ chrome.storage.onChanged.addListener((changes, areaName) => {
   if (areaName === "local" && changes.hiddenTweetCategories) {
     renderHiddenCategories(changes.hiddenTweetCategories.newValue);
   }
+  if (areaName === "local" && changes.anonymizeSocialPosters) {
+    renderPrivacy(changes.anonymizeSocialPosters.newValue);
+  }
 });
 
 void (async () => {
-  const { hiddenTweetCategories, typesafeApiKey } = await chrome.storage.local.get([
+  const { hiddenTweetCategories, typesafeApiKey, anonymizeSocialPosters } = await chrome.storage.local.get([
     "hiddenTweetCategories",
-    "typesafeApiKey"
+    "typesafeApiKey",
+    "anonymizeSocialPosters"
   ]);
   renderHiddenCategories(hiddenTweetCategories);
+  renderPrivacy(anonymizeSocialPosters);
   showKeyState(Boolean(typesafeApiKey));
 })();

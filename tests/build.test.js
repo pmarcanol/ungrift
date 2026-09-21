@@ -22,13 +22,16 @@ test("distributable contains only allowlisted runtime files and no credentials",
   assert.equal(manifest.name, "Ungrift");
   assert.equal(manifest.version, require("../package.json").version);
   assert.ok(manifest.host_permissions.includes("https://api.typesafe.ai/*"));
+  assert.ok(manifest.host_permissions.includes("https://www.linkedin.com/*"));
   assert.ok(!manifest.host_permissions.some((host) => host.includes("127.0.0.1")));
   assert.equal(manifest.action.default_popup, "popup/index.html");
   assert.equal(manifest.side_panel, undefined);
   assert.ok(files.includes("icons/icon16.png"));
   assert.ok(files.includes("icons/icon128.png"));
+  assert.ok(files.includes("src/privacy.js"));
   assert.ok(!files.some((file) => file.startsWith("sidepanel/") || file.startsWith("options/")));
   const popup = fs.readFileSync(path.join(folder, "popup/index.html"), "utf8");
+  assert.match(popup, /id="anonymize-posters"/);
   const filterValues = [...popup.matchAll(/<input type="checkbox" value="([^"]+)"/g)]
     .map((match) => match[1]);
   assert.deepEqual(filterValues, Object.keys(CATEGORIES));

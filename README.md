@@ -1,6 +1,6 @@
 # Ungrift
 
-Ungrift is a dependency-free Chrome extension that labels posts as you scroll and lets you hide behavioral categories from your X timeline. Settings live in a compact toolbar popover; Ungrift does not display or export the underlying post data.
+Ungrift is a dependency-free Chrome extension that labels posts as you scroll, lets you hide behavioral categories from your X timeline, and can visually anonymize posters on X and LinkedIn while you record. Settings live in a compact toolbar popover; Ungrift does not display or export the underlying post data.
 
 The extension makes **zero additional requests to X**. It reads rendered tweet cards and passively inspects timeline responses X already requested. Classification batches go directly from the extension background worker to TypeSafe's Jev API.
 
@@ -38,6 +38,10 @@ The badge always leads with the verdict. When the integrity signals cross the co
 
 Filter choices persist and are broadcast to every open X tab. Matching cards disappear as soon as their classification returns. Pending, unavailable, and failed classifications remain visible because they do not yet have a category. **Show all categories** clears all filters, and **Retry** restarts failed classification batches in open X tabs.
 
+### Recording privacy
+
+Switch on **Anonymize posters** to show only each poster's first name and replace profile photos with a neutral silhouette on X and LinkedIn. The effect is purely presentational: switching it off restores the original page immediately, and Ungrift does not rewrite post data or images at the source. The preference is stored only in the current Chrome profile and is applied to open social tabs without a reload.
+
 ## How it works
 
 - A page-world script observes X's existing `fetch` and `XMLHttpRequest` timeline responses by cloning them locally.
@@ -67,6 +71,7 @@ icons/                     Toolbar and extension icons
 popup/                     Floating settings popover
 src/main-world.js          Observes X's existing timeline responses
 src/content.js             Labels and filters rendered tweet cards
+src/privacy.js             Visually anonymizes X and LinkedIn post authors
 src/tweet-data.js          Normalizes X response objects
 src/background.js          Stores settings and brokers Jev requests
 src/classification.js      Rubrics, display labels, batching, and cache
