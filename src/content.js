@@ -81,6 +81,7 @@
       .ungrift-label[data-risk="misleading"] { color: #9a3412; border-color: #fb923c; background: #fff7ed; }
       .ungrift-label[data-risk="bad_faith"] { color: #fff; border-color: #e11d48; background: #be123c; }
       .ungrift-label[data-state="error"] { border-style: dashed; }
+      .ungrift-label[hidden] { display: none !important; }
 
       .ungrift-category-hidden {
         display: none !important;
@@ -246,15 +247,23 @@
     const label = display?.label || {
       pending: "Classifying…", error: "Classifier offline", unavailable: "No text"
     }[classification.status];
+    const showBadge = Boolean(label);
     const description = category
       ? `AI assessment of this post's available context. Verdict: ${categoryDescriptions[category]} Verdict confidence: ${Math.round(classification.confidence * 100)}%. Likely communicative intent: ${INTENT_LABELS[intent]} (${Math.round(classification.intent.confidence * 100)}% confidence). Misleading-impression risk: ${Math.round(classification.misleadingProbability * 100)}%. Observable bad-faith signals: ${Math.round(classification.badFaithProbability * 100)}%. These are provisional judgments, not verified facts about the author or their private intent.`
       : classification.error || (classification.status === "unavailable" ? "No post text available to classify." : "Queued for batched Jev classification.");
     badge.dataset.category = category || "";
     badge.dataset.risk = display?.risk || "";
     badge.dataset.state = classification.status;
-    badge.setAttribute("aria-label", `Post ${annotation.postNumber}: ${label}. ${description}`);
-    badge.title = `Feed #${annotation.postNumber} · ${description}`;
-    if (badge.textContent !== label) badge.textContent = label;
+    badge.hidden = !showBadge;
+    if (showBadge) {
+      badge.setAttribute("aria-label", `Post ${annotation.postNumber}: ${label}. ${description}`);
+      badge.title = `Feed #${annotation.postNumber} · ${description}`;
+    } else {
+      badge.removeAttribute("aria-label");
+      badge.removeAttribute("title");
+    }
+    const badgeText = label || "";
+    if (badge.textContent !== badgeText) badge.textContent = badgeText;
   }
 
   function extractArticle(article) {
@@ -309,9 +318,10 @@
   function classifyAndAnnotate(card, key, context, badgeHost) {
     const classification = classifier.get(context);
     const annotation = annotatePost(card, key, context.handle, classification, badgeHost);
-    const isHidden = Boolean(classification.category && hiddenCategories.has(classification.category));
+    const displayedCategory = displayFor(classification) ? classification.category : null;
+    const isHidden = Boolean(displayedCategory && hiddenCategories.has(displayedCategory));
     card.classList.toggle("ungrift-category-hidden", isHidden);
-    if (classification.category) card.dataset.ungriftCategory = classification.category;
+    if (displayedCategory) card.dataset.ungriftCategory = displayedCategory;
     else delete card.dataset.ungriftCategory;
 
     return {
@@ -321,7 +331,7 @@
         postNumber: annotation.postNumber,
         elementId: annotation.elementId,
         ...context,
-        category: classification.category || null,
+        category: displayedCategory,
         classification
       }
     };

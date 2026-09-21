@@ -14,7 +14,7 @@ Ungrift makes one primary three-way verdict for each post. **Unclear** is used w
 | **Good intent** | `good_intent` | Appears to be a sincere attempt to inform, help, discuss, make a case, entertain, or share a viewpoint without deceptive tactics for personal gain. |
 | **Unclear** | `unclear` | The available text is insufficient, mixed, or too dependent on missing context to assess responsibly. |
 
-Badges update beside the author as each classification returns. Their tooltip includes the page-session post number, model confidence, and category definition. If either site unmounts and later remounts the same post, its number and cached classification are reused.
+Badges update beside the author when a classification reaches at least 70% confidence. Lower-confidence verdicts remain unlabeled and visible. Badge tooltips include the page-session post number, model confidence, and category definition. If either site unmounts and later remounts the same post, its number and cached classification are reused.
 
 ### Intent and integrity signals
 
@@ -36,7 +36,7 @@ The badge always leads with the verdict. When the integrity signals cross the co
 5. Save your Jev API key. It stays in this Chrome profile and is never synced.
 6. Switch on any categories you want hidden, then open or reload `https://x.com/home` or `https://www.linkedin.com/feed/`.
 
-Filter choices persist and are broadcast to every open X and LinkedIn tab. Matching cards disappear as soon as their classification returns. Pending, unavailable, and failed classifications remain visible because they do not yet have a category. **Show all categories** clears all filters, and **Retry** restarts failed classification batches in open feed tabs.
+Filter choices persist and are broadcast to every open X and LinkedIn tab. Matching cards disappear only when their classification reaches the 70% display threshold. Low-confidence, pending, unavailable, and failed classifications remain visible. **Show all categories** clears all filters, and **Retry** restarts failed classification batches in open feed tabs.
 
 ### Recording privacy
 

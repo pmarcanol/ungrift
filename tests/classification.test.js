@@ -3,7 +3,9 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const { setTimeout: delay } = require("node:timers/promises");
-const { CATEGORIES, LINKEDIN_CATEGORIES, LABELS, INTENTS, displayFor, BatchClassifier } = require("../src/classification.js");
+const {
+  CATEGORIES, LINKEDIN_CATEGORIES, LABELS, INTENTS, MIN_LABEL_CONFIDENCE, displayFor, BatchClassifier
+} = require("../src/classification.js");
 const { buildRequest, createClassifier } = require("../src/jev-client.js");
 
 function tweet(index, extra = {}) { return { handle: `@user${index}`, content: `Tweet ${index}`, ...extra }; }
@@ -99,6 +101,15 @@ test("shows the primary verdict and prioritizes misleading or bad-faith risk", (
   assert.deepEqual(displayFor({ ...sincere, misleadingProbability: 0.8, badFaithProbability: 0.9 }),
     { label: "Good intent · bad-faith risk", risk: "bad_faith" });
   assert.deepEqual(displayFor(result("grift")), { label: "Grift", risk: "" });
+});
+
+test("only displays verdicts at or above the minimum confidence", () => {
+  assert.equal(MIN_LABEL_CONFIDENCE, 0.7);
+  assert.equal(displayFor({ category: "grift" }), null);
+  assert.equal(displayFor({ ...result("grift"), confidence: 0.699 }), null);
+  assert.deepEqual(displayFor({ ...result("grift"), confidence: 0.7 }), {
+    label: "Grift", risk: ""
+  });
 });
 
 test("serial batches of eight, deduplication, and cached remounts", async (t) => {

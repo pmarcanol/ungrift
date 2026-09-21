@@ -180,6 +180,19 @@ for (const variant of variants) {
   });
 }
 
+test("a low-confidence verdict has no label and cannot hide its post", async (t) => {
+  const lowConfidence = { ...result("grift"), confidence: 0.69 };
+  const feed = harness(t, variants[0], (posts) => ({ results: posts.map(() => lowConfidence) }), ["grift"]);
+  await feed.settle();
+  const card = feed.document.querySelector("article");
+  const badge = card.querySelector(".ungrift-label");
+  assert.equal(badge.hidden, true);
+  assert.equal(badge.textContent, "");
+  assert.equal(badge.hasAttribute("aria-label"), false);
+  assert.equal(card.classList.contains("ungrift-category-hidden"), false);
+  assert.equal(card.hasAttribute("data-ungrift-category"), false);
+});
+
 for (const commentary of ["I disagree with this claim.", ""]) {
   test(`LinkedIn shared post ${commentary ? "with commentary" : "without commentary"}: correct evidence, badge owner, and quote edits`, async (t) => {
     const feed = harness(t, { hostname: "www.linkedin.com", markup: `

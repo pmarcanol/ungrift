@@ -41,6 +41,7 @@
   });
   const MISLEADING_THRESHOLD = 0.65;
   const BAD_FAITH_THRESHOLD = 0.7;
+  const MIN_LABEL_CONFIDENCE = 0.7;
   const BATCH_SIZE = 8;
   const MAX_CACHE = 2000;
 
@@ -68,7 +69,8 @@
   }
 
   function displayFor(result) {
-    if (!result || !Object.hasOwn(LABELS, result.category)) return null;
+    if (!result || !Object.hasOwn(LABELS, result.category) ||
+        !Number.isFinite(result.confidence) || result.confidence < MIN_LABEL_CONFIDENCE) return null;
     const badFaithRisk = result.badFaithProbability >= BAD_FAITH_THRESHOLD;
     const misleadingRisk = result.misleadingProbability >= MISLEADING_THRESHOLD;
     const risk = badFaithRisk ? "bad_faith" : misleadingRisk ? "misleading" : "";
@@ -150,7 +152,8 @@
   }
 
   return {
-    CATEGORIES, LINKEDIN_CATEGORIES, categoriesFor, LABELS, INTENTS, INTENT_LABELS, MISLEADING_THRESHOLD, BAD_FAITH_THRESHOLD,
+    CATEGORIES, LINKEDIN_CATEGORIES, categoriesFor, LABELS, INTENTS, INTENT_LABELS,
+    MISLEADING_THRESHOLD, BAD_FAITH_THRESHOLD, MIN_LABEL_CONFIDENCE,
     BATCH_SIZE, MAX_CACHE, contextFor, fingerprint, validResult, displayFor, BatchClassifier
   };
 });
