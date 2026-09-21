@@ -40,7 +40,7 @@
 
   function markNameWithin(container) {
     if (!container) return false;
-    const elements = [container, ...container.querySelectorAll("span")];
+    const elements = [container, ...container.querySelectorAll("span, p")];
 
     for (const element of elements) {
       const name = directText(element);
@@ -79,15 +79,20 @@
   }
 
   function scanLinkedInPost(post) {
+    const linkedInData = globalScope.__UNGRIFT_LINKEDIN_DATA__;
+    const extracted = linkedInData?.extractPost(post);
     const actor = post.querySelector(
       ".update-components-actor, .feed-shared-actor, .update-components-actor__container"
     ) || post;
     for (const image of actor.querySelectorAll(
       "img.update-components-actor__avatar-image, img.feed-shared-actor__avatar-image, " +
-      'img[class*="EntityPhoto-circle"]'
+      'img[class*="EntityPhoto-circle"], a[href*="/in/"] img, a[href*="/company/"] img'
     )) markAvatar(image);
 
+    if (markNameWithin(extracted?.badgeHost)) return;
     const nameContainers = actor.querySelectorAll([
+      '[data-test-id="main-feed-activity-card__actor-name"]',
+      '[data-testid="main-feed-activity-card__actor-name"]',
       ".update-components-actor__name",
       ".feed-shared-actor__name",
       ".update-components-actor__title"
@@ -105,11 +110,11 @@
       return;
     }
     if (location.hostname === "linkedin.com" || location.hostname === "www.linkedin.com") {
-      document.querySelectorAll([
-        ".feed-shared-update-v2",
-        ".update-components-update-v2",
-        '.occludable-update[data-urn^="urn:li:"]'
-      ].join(",")).forEach(scanLinkedInPost);
+      const linkedInData = globalScope.__UNGRIFT_LINKEDIN_DATA__;
+      const posts = linkedInData?.findPostElements(document) || document.querySelectorAll([
+        ".feed-shared-update-v2", ".update-components-update-v2", ".occludable-update"
+      ].join(","));
+      posts.forEach(scanLinkedInPost);
     }
   }
 

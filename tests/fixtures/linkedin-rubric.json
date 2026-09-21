@@ -1,0 +1,96 @@
+[
+  {
+    "id": "empty-leadership",
+    "expected": "grift",
+    "content": "Leadership isn't a title. It's a mindset. Unlock authentic synergies. Empower your people. Elevate your impact. The future belongs to those who dare. Agree? Follow me for more leadership insights.",
+    "profileDescription": "Executive Coach | Leadership Transformation | Former VP"
+  },
+  {
+    "id": "spanish-humblebrag",
+    "expected": "grift",
+    "content": "Ayer cerré mi mayor negocio. Pero el verdadero éxito no se mide en dinero. Se mide en mentalidad. Dejá de poner excusas y empezá a crear oportunidades. Los líderes no esperan, transforman. ¿Estás de acuerdo? Comentá LIDER y te cuento mi secreto."
+  },
+  {
+    "id": "concrete-debugging",
+    "expected": "good_intent",
+    "content": "Our queue retried failed payments without an idempotency key. A timeout after a successful charge could charge a customer twice. We now persist an attempt ID before calling the provider and reuse it on retries. It adds one database write but makes retries safe.",
+    "profileDescription": "Founder at a payments consulting firm"
+  },
+  {
+    "id": "direct-opening",
+    "expected": "good_intent",
+    "content": "We're hiring a senior backend engineer on our billing team. Remote within Uruguay, TypeScript and PostgreSQL, USD 5,000–6,000/month. You'll own invoicing and payment reconciliation. Send me your CV if interested."
+  },
+  {
+    "id": "bare-platitude",
+    "expected": "grift",
+    "content": "Growth starts outside your comfort zone."
+  },
+  {
+    "id": "shared-opening",
+    "expected": "good_intent",
+    "content": "You want to work with this person on this team.",
+    "citedOrRetweetedTweetContent": "Our data ingestion team is hiring a senior engineer. We build connectors from customer warehouses to our messaging platform. You'll work on throughput, retries and schema evolution. Remote in the UK. Apply through our careers page."
+  },
+  {
+    "id": "personal-milestone",
+    "expected": "good_intent",
+    "content": "I start a new role as a QA engineer on Monday. Thanks to my old team for the support over the past three years. Excited to get started."
+  },
+  {
+    "id": "numbers-as-authority",
+    "expected": "grift",
+    "content": "I scaled 3 companies to 8 figures. The secret? Mindset. Most founders are busy working IN the business, not ON it. Winners build systems. Losers make excuses. DM SCALE to unlock my proven success framework."
+  },
+  {
+    "id": "beta-signup-logistics",
+    "expected": "good_intent",
+    "content": "Both Android and iOS builds of our privacy app are ready for beta testing. DM me if you want to test it and tell me what interests you about it. The app works without an account."
+  },
+  {
+    "id": "recruiting-explanation",
+    "expected": "good_intent",
+    "content": "Myth: the best power-market candidates always come from utilities. Hedge-fund analysts bring quantitative risk skills; software forecasting teams bring modeling and optimization; independent power producers bring asset-operation experience. Match the source of talent to the work your team actually needs. Which backgrounds have worked for your team?",
+    "profileDescription": "Energy Recruiter | Helping companies hire power-market talent"
+  },
+  {
+    "id": "unseen-article",
+    "expected": "grift",
+    "content": "I've been working on this for a while after talking to executives all summer. My new article in a leading business magazine: From AI FOMO to AI Hangover. Read it here: https://example.com/article"
+  },
+  {
+    "id": "humor-with-article",
+    "expected": "good_intent",
+    "content": "I started three coding agents to save time. Now I need a fourth agent to explain what the first three did. Reviewed ten thousand lines with a confident 'probably fine.' My next prompt: how hard is carpentry? I wrote a longer, equally self-deprecating article about this: https://example.com/article"
+  },
+  {
+    "id": "empty-service-positioning",
+    "expected": "grift",
+    "content": "Teams don't need more developers. They need ownership. A service. An app. An integration. At our agency, we remove work, not add meetings. We take responsibility and drive impact. That's the difference between adding headcount and moving forward."
+  },
+  {
+    "id": "concrete-service-scope",
+    "expected": "good_intent",
+    "content": "Our agency takes over stalled billing integrations. We own provider webhooks, idempotency and reconciliation, then hand over a runbook and two weeks of on-call support. Your team retains deployment approval. Send us a description of your current provider and failure mode to discuss fit."
+  },
+  {
+    "id": "inflated-hiring-hype",
+    "expected": "grift",
+    "content": "Join us and learn more in two weeks than three years elsewhere. Our superhuman team delivers in hours what everyone else takes months to do. Work with the biggest brands, earn an insane amount, and unlock your destiny. DM WINNER."
+  },
+  {
+    "id": "corporate-virtue-fluff",
+    "expected": "grift",
+    "content": "Since 1920, our company has stood for progress. Markets change but our values never do. We put people first, tackle tomorrow's biggest challenges, and inspire confidence. Together we are accelerating a better future. That's the power of our brand."
+  },
+  {
+    "id": "missing-context",
+    "expected": "unclear",
+    "content": "This. https://example.com/post"
+  },
+  {
+    "id": "unsupported-payoff",
+    "expected": "grift",
+    "content": "Our enterprise platform pays for itself in under six months. Unlock secure, profitable transformation. Your future starts here."
+  }
+]

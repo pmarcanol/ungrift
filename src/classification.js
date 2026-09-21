@@ -10,6 +10,14 @@
     good_intent: "The post appears primarily intended to inform, help, discuss, make a sincere case, entertain honestly, or share a viewpoint without using manipulative or deceptive tactics for personal gain.",
     unclear: "The supplied text is insufficient, mixed, mostly context-free, or plausibly fits both alternatives, so intent cannot be assessed responsibly."
   });
+  const LINKEDIN_CATEGORIES = Object.freeze({
+    grift: "The visible post asks for attention while delivering mostly fluff: recycled motivational wisdom, empty thought leadership, corporate positioning, prestige-led teasers, humblebrag lessons, unsupported payoff promises, or engagement bait. The dominant payoff is visibility, authority, clicks, or leads rather than useful substance or honest entertainment. A few names, numbers, topical keywords, or obvious observations do not rescue it. An explicit sales pitch, provable lie, or proof of malicious intent is not required.",
+    good_intent: "The visible contribution earns attention through useful information, an explained argument, actionable advice, a concrete experience, honest entertainment, or a straightforward personal, hiring, event, or product update. Substance is the main payoff, not a token detail attached to a branding exercise. A relevant share can supply that value through its original post. Ordinary promotion and familiar advice can qualify when their practical value is clear; pleasant tone and apparent sincerity alone cannot.",
+    unclear: "Essential context is actually missing or unreadable, or the visible contribution has no discernible meaning to assess, such as a bare link or an unexplained reaction. Use this sparingly. Recognizable fluff, generic advice, and promotional teasers are assessable and should not receive an uncertainty pass merely because the author's motives or linked content are unknown."
+  });
+  function categoriesFor(platform) {
+    return platform === "linkedin" ? LINKEDIN_CATEGORIES : CATEGORIES;
+  }
   const LABELS = Object.freeze({
     grift: "Grift",
     good_intent: "Good intent",
@@ -142,7 +150,7 @@
   }
 
   return {
-    CATEGORIES, LABELS, INTENTS, INTENT_LABELS, MISLEADING_THRESHOLD, BAD_FAITH_THRESHOLD,
+    CATEGORIES, LINKEDIN_CATEGORIES, categoriesFor, LABELS, INTENTS, INTENT_LABELS, MISLEADING_THRESHOLD, BAD_FAITH_THRESHOLD,
     BATCH_SIZE, MAX_CACHE, contextFor, fingerprint, validResult, displayFor, BatchClassifier
   };
 });

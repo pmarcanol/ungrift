@@ -3,7 +3,7 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
 const { setTimeout: delay } = require("node:timers/promises");
-const { CATEGORIES, LABELS, INTENTS, displayFor, BatchClassifier } = require("../src/classification.js");
+const { CATEGORIES, LINKEDIN_CATEGORIES, LABELS, INTENTS, displayFor, BatchClassifier } = require("../src/classification.js");
 const { buildRequest, createClassifier } = require("../src/jev-client.js");
 
 function tweet(index, extra = {}) { return { handle: `@user${index}`, content: `Tweet ${index}`, ...extra }; }
@@ -39,14 +39,14 @@ async function until(predicate) {
 test("uses three verdict rubrics and independently addresses each tweet's context", () => {
   const request = buildRequest([tweet(1), tweet(2, { profileDescription: "Bio", citedOrRetweetedTweetContent: "Quote" })]);
   assert.equal(Object.keys(request.questions).length, 8);
-  assert.deepEqual(request.questions.tweet_1_category.criteria, CATEGORIES);
-  assert.deepEqual(request.questions.tweet_1_intent.criteria, INTENTS);
-  assert.equal(request.questions.tweet_1_misleading.type, "noul");
-  assert.equal(request.questions.tweet_1_bad_faith.type, "noul");
-  assert.match(request.questions.tweet_0_category.instructions.join(" "), /does not by itself make a post grift/i);
-  assert.match(request.questions.tweet_1_intent.instructions[0], /tweets\[1\]/);
-  assert.equal(request.state.tweets[1].profileDescription, "Bio");
-  assert.equal(request.state.tweets[1].citedOrRetweetedTweetContent, "Quote");
+  assert.deepEqual(request.questions.post_1_category.criteria, CATEGORIES);
+  assert.deepEqual(request.questions.post_1_intent.criteria, INTENTS);
+  assert.equal(request.questions.post_1_misleading.type, "noul");
+  assert.equal(request.questions.post_1_bad_faith.type, "noul");
+  assert.match(request.questions.post_0_category.instructions.join(" "), /does not by itself make a post grift/i);
+  assert.match(request.questions.post_1_intent.instructions[0], /posts\[1\]/);
+  assert.equal(request.state.posts[1].profileDescription, "Bio");
+  assert.equal(request.state.posts[1].citedOrRetweetedTweetContent, "Quote");
 });
 
 test("uses clear display labels without changing category keys", () => {
@@ -54,6 +54,41 @@ test("uses clear display labels without changing category keys", () => {
   assert.deepEqual(Object.values(LABELS), ["Grift", "Good intent", "Unclear"]);
   assert.equal(INTENTS.push_agenda, "Primarily pushes the reader toward a belief, faction, cause, or action through forceful framing.");
   assert.equal(Object.hasOwn(INTENTS, "persuade"), false);
+});
+
+test("LinkedIn uses a substance-first rubric while X retains its original definitions", () => {
+  const post = tweet(1, { content: "Leaders empower. Unlock your potential. Agree?" });
+  const linkedin = buildRequest([post], "jev-latest", "linkedin");
+  const x = buildRequest([post], "jev-latest", "x");
+  assert.deepEqual(linkedin.questions.post_0_category.criteria, LINKEDIN_CATEGORIES);
+  assert.deepEqual(x.questions.post_0_category.criteria, CATEGORIES);
+  assert.deepEqual(Object.keys(LINKEDIN_CATEGORIES), Object.keys(CATEGORIES));
+  assert.match(linkedin.questions.post_0_category.instructions.join(" "), /substance-first LinkedIn/);
+  assert.doesNotMatch(x.questions.post_0_category.instructions.join(" "), /substance-first LinkedIn/);
+  // Fluff must not redefine the independent deception-risk judgments.
+  assert.deepEqual(linkedin.questions.post_0_misleading, x.questions.post_0_misleading);
+  assert.deepEqual(linkedin.questions.post_0_bad_faith, x.questions.post_0_bad_faith);
+});
+
+test("identical cross-posts cannot reuse a verdict from a different platform rubric", async () => {
+  const requests = [];
+  const classify = createClassifier({ apiKey: "test-key", fetchImpl: async (_url, options) => {
+    const request = JSON.parse(options.body);
+    requests.push(request);
+    const response = apiResponse(request);
+    if (request.questions.post_0_category.criteria.grift === LINKEDIN_CATEGORIES.grift) {
+      const verdict = result("grift");
+      response.answers.post_0_category = { type: "choice", choice: verdict.category,
+        confidence: verdict.confidence, probabilities: verdict.probabilities };
+    }
+    return { ok: true, json: async () => response };
+  } });
+  const posts = [tweet(1)];
+  assert.equal((await classify(posts, "x")).results[0].category, "good_intent");
+  assert.equal((await classify(posts, "linkedin")).results[0].category, "grift");
+  assert.equal((await classify(posts, "x")).results[0].category, "good_intent");
+  assert.equal((await classify(posts, "linkedin")).results[0].category, "grift");
+  assert.equal(requests.length, 2);
 });
 
 test("shows the primary verdict and prioritizes misleading or bad-faith risk", () => {
@@ -161,7 +196,7 @@ test("background client preserves order, deduplicates across tabs, and keeps the
   } });
   const [first, second] = await Promise.all([classify([tweet(1), tweet(2), tweet(1)]), classify([tweet(2)])]);
   assert.equal(calls.length, 1);
-  assert.equal(calls[0].state.tweets.length, 2);
+  assert.equal(calls[0].state.posts.length, 2);
   assert.equal(first.results.length, 3);
   assert.deepEqual(first.results[1], second.results[0]);
   await classify([tweet(1, { profileDescription: "Changed" })]);

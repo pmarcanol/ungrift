@@ -1,14 +1,17 @@
 {
   "name": "ungrift",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "private": true,
-  "description": "Ungrift classifies X posts and adds recording privacy for X and LinkedIn.",
+  "description": "Ungrift classifies X and LinkedIn posts and adds visual recording privacy.",
   "scripts": {
     "build": "node scripts/build.js",
     "test": "node --test",
-    "check": "node --check src/tweet-data.js && node --check src/main-world.js && node --check src/content.js && node --check src/privacy.js && node --check src/background.js && node --check src/classification.js && node --check src/jev-client.js && node --check popup/popup.js && npm test"
+    "check": "node --check src/tweet-data.js && node --check src/linkedin-data.js && node --check src/main-world.js && node --check src/content.js && node --check src/privacy.js && node --check src/background.js && node --check src/classification.js && node --check src/jev-client.js && node --check popup/popup.js && npm test"
   },
   "engines": {
     "node": ">=20.6"
+  },
+  "devDependencies": {
+    "linkedom": "0.18.12"
   }
 }

@@ -26,8 +26,13 @@ test("distributable contains only allowlisted runtime files and no credentials",
   assert.ok(!manifest.host_permissions.some((host) => host.includes("127.0.0.1")));
   assert.equal(manifest.action.default_popup, "popup/index.html");
   assert.equal(manifest.side_panel, undefined);
+  const feedScript = manifest.content_scripts.find((script) => script.js.includes("src/content.js"));
+  assert.ok(feedScript.matches.includes("https://www.linkedin.com/*"));
+  assert.ok(feedScript.js.includes("src/linkedin-data.js"));
+  assert.ok(feedScript.js.includes("src/privacy.js"));
   assert.ok(files.includes("icons/icon16.png"));
   assert.ok(files.includes("icons/icon128.png"));
+  assert.ok(files.includes("src/linkedin-data.js"));
   assert.ok(files.includes("src/privacy.js"));
   assert.ok(!files.some((file) => file.startsWith("sidepanel/") || file.startsWith("options/")));
   const popup = fs.readFileSync(path.join(folder, "popup/index.html"), "utf8");
