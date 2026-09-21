@@ -22,7 +22,7 @@ function renderHiddenCategories(categories) {
 async function saveHiddenCategories() {
   const categories = categoryInputs.filter((input) => input.checked).map((input) => input.value);
   renderHiddenCategories(categories);
-  await chrome.storage.local.set({ hiddenTweetCategories: categories });
+  await chrome.storage.local.set({ hiddenPostCategories: categories });
 }
 
 function showKeyState(saved, message) {
@@ -37,7 +37,7 @@ async function retryOpenTimelines() {
   try {
     await chrome.runtime.sendMessage({ type: "retry-classification" });
   } catch {
-    // X may not be open yet; the next timeline load will use the new key.
+    // A supported feed may not be open yet; the next load will use the new key.
   }
 }
 
@@ -83,20 +83,21 @@ retryButton.addEventListener("click", async () => {
   keyStatus.textContent = "Retrying open timelines…";
   await retryOpenTimelines();
   const { typesafeApiKey } = await chrome.storage.local.get("typesafeApiKey");
-  showKeyState(Boolean(typesafeApiKey), "Retry sent to open X tabs");
+  showKeyState(Boolean(typesafeApiKey), "Retry sent to open feeds");
 });
 
 chrome.storage.onChanged.addListener((changes, areaName) => {
-  if (areaName === "local" && changes.hiddenTweetCategories) {
-    renderHiddenCategories(changes.hiddenTweetCategories.newValue);
+  if (areaName === "local" && (changes.hiddenPostCategories || changes.hiddenTweetCategories)) {
+    renderHiddenCategories((changes.hiddenPostCategories || changes.hiddenTweetCategories).newValue);
   }
 });
 
 void (async () => {
-  const { hiddenTweetCategories, typesafeApiKey } = await chrome.storage.local.get([
+  const { hiddenPostCategories, hiddenTweetCategories, typesafeApiKey } = await chrome.storage.local.get([
+    "hiddenPostCategories",
     "hiddenTweetCategories",
     "typesafeApiKey"
   ]);
-  renderHiddenCategories(hiddenTweetCategories);
+  renderHiddenCategories(hiddenPostCategories ?? hiddenTweetCategories);
   showKeyState(Boolean(typesafeApiKey));
 })();

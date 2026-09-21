@@ -1,11 +1,17 @@
 {
   "manifest_version": 3,
   "name": "Ungrift",
-  "version": "0.7.1",
+  "version": "0.8.8",
   "minimum_chrome_version": "116",
-  "description": "Classifies and filters posts on your X timeline.",
+  "description": "Classifies and filters posts on your X and LinkedIn feeds.",
   "permissions": ["tabs", "storage"],
-  "host_permissions": ["https://x.com/*", "https://twitter.com/*", "https://api.typesafe.ai/*"],
+  "host_permissions": [
+    "https://x.com/*",
+    "https://twitter.com/*",
+    "https://www.linkedin.com/*",
+    "https://linkedin.com/*",
+    "https://api.typesafe.ai/*"
+  ],
   "icons": {
     "16": "icons/icon16.png",
     "32": "icons/icon32.png",
@@ -31,8 +37,13 @@
       "world": "MAIN"
     },
     {
-      "matches": ["https://x.com/*", "https://twitter.com/*"],
-      "js": ["src/classification.js", "src/content.js"],
+      "matches": [
+        "https://x.com/*",
+        "https://twitter.com/*",
+        "https://www.linkedin.com/*",
+        "https://linkedin.com/*"
+      ],
+      "js": ["src/classification.js", "src/linkedin-data.js", "src/content.js"],
       "run_at": "document_start"
     }
   ]
