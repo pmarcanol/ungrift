@@ -1,0 +1,112 @@
+[
+  {
+    "id": "hustle-platitude",
+    "expected": "grift",
+    "content": "Winners execute. Losers make excuses. Read that again."
+  },
+  {
+    "id": "insider-hype",
+    "expected": "grift",
+    "content": "Hearing from insiders: the next AI model is basically AGI. The competition is finished. Nobody is ready for what's coming. Rumor for now. Follow for the real alpha.",
+    "profileDescription": "AI news and predictions"
+  },
+  {
+    "id": "keyword-funnel",
+    "expected": "grift",
+    "content": "I made $40k this month with one AI prompt. You don't need skills, just my system. Reply MONEY and follow me to unlock it."
+  },
+  {
+    "id": "empty-contrarian",
+    "expected": "grift",
+    "content": "Coding is dead. College is dead. Jobs are dead. Adapt or stay poor."
+  },
+  {
+    "id": "rage-bait",
+    "expected": "grift",
+    "content": "Everyone in this industry is a useless idiot except me. Quote this if you're offended. Let's see how many losers take the bait."
+  },
+  {
+    "id": "concrete-debugging",
+    "expected": "good_intent",
+    "content": "Our payment retries could double-charge after a timeout. Persisting an idempotency key before the request fixed it; retry with the same key, not a new one.",
+    "profileDescription": "Founder | Payments consultant"
+  },
+  {
+    "id": "honest-joke",
+    "expected": "good_intent",
+    "content": "Bought a standing desk. Now I can ignore my tasks at two different heights."
+  },
+  {
+    "id": "personal-update",
+    "expected": "good_intent",
+    "content": "Got my first engineering job today! Starting Monday. Very nervous and very excited."
+  },
+  {
+    "id": "ordinary-conversation",
+    "expected": "good_intent",
+    "content": "Train delayed again, so I walked home along the river. Unexpectedly the best part of my day."
+  },
+  {
+    "id": "explained-disagreement",
+    "expected": "good_intent",
+    "content": "I disagree with removing the bus lane: it carries more people per hour than the car lane, and the proposed detour adds two transfers for riders. Keep it and adjust loading hours instead."
+  },
+  {
+    "id": "beta-signup",
+    "expected": "good_intent",
+    "content": "Our offline note app has an Android beta now. Markdown import works; sync isn't ready yet. DM if you'd like to test.",
+    "profileDescription": "Founder of the note app"
+  },
+  {
+    "id": "contextual-share",
+    "expected": "good_intent",
+    "content": "This fixed the duplicate-charge bug for us too.",
+    "citedOrRetweetedTweetContent": "Persist an idempotency key before calling the payment API. Reuse it when retrying a timeout so a successful charge isn't processed twice."
+  },
+  {
+    "id": "missing-media",
+    "expected": "unclear",
+    "content": "This. https://example.com/video"
+  },
+  {
+    "id": "quoted-bait-critique",
+    "expected": "good_intent",
+    "content": "Don't follow this advice: roulette spins are independent, so doubling a losing bet doesn't improve your odds and eventually hits table or bankroll limits.",
+    "citedOrRetweetedTweetContent": "Guaranteed casino income! Double your bet after every loss and you cannot lose. DM for my system."
+  },
+  {
+    "id": "sweeping-workplace-doom",
+    "expected": "grift",
+    "content": "Engineering is over. Two weeks into my new corporate job and nobody knows anything. Everyone from junior to principal just presses enter in an AI tool for 13 hours a day. Nobody reads, nobody thinks, nobody fixes bugs. Humans do nothing anymore. This entire profession is dead.",
+    "profileDescription": "programmer"
+  },
+  {
+    "id": "credential-led-catastrophe",
+    "expected": "grift",
+    "content": "I resigned from a leading AI lab today. I spent three years doing research at the two most prestigious labs. Neither is responsible. They are racing to superintelligence and gambling with all our lives. More thoughts below.",
+    "profileDescription": "AI research"
+  },
+  {
+    "id": "article-income-preview",
+    "expected": "grift",
+    "content": "https://example.com/article\nArticle preview:\nHOW I BUILT AN AI CHANNEL TO $45K/MONTH\nNo camera. No team. One person, one system, effortless income.",
+    "profileDescription": "AI workflows | Early alpha\nProfessional category: Social Media Influencer\nProfile website: https://example.com/casino"
+  },
+  {
+    "id": "grounded-workplace-complaint",
+    "expected": "good_intent",
+    "content": "Our team merged an AI-generated migration without checking its rollback. It dropped an index and doubled query latency. I am angry that review time was cut. We need a staging rollback check and a named reviewer before deploying migrations."
+  },
+  {
+    "id": "substantive-risk-warning",
+    "expected": "good_intent",
+    "content": "Our agent could read untrusted page instructions and use an authenticated email tool in the same session. In a local test, a page induced it to forward a mock secret. We restricted recipients and require approval before sending. This test shows a concrete failure mode, not that every agent behaves this way.",
+    "profileDescription": "AI safety researcher"
+  },
+  {
+    "id": "useful-post-promotional-profile",
+    "expected": "good_intent",
+    "content": "To export your videos without recompressing them, use stream copy. It preserves the original codec but the output container must support it; otherwise you need to re-encode.",
+    "profileDescription": "AI workflows | Early alpha\nProfessional category: Social Media Influencer\nProfile website: https://example.com/casino"
+  }
+]

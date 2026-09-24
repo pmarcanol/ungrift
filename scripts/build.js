@@ -6,6 +6,7 @@ const path = require("node:path");
 // Explicit runtime allowlist: never copy .env, skills, test profiles, or local files.
 const FILES = [
   "manifest.json", "src/main-world.js", "src/tweet-data.js", "src/linkedin-data.js", "src/content.js", "src/privacy.js",
+  "src/annotations.js", "src/marker.js", "src/marker-background.js", "popup/marker-popup.js",
   "src/background.js", "src/classification.js", "src/jev-client.js",
   "popup/index.html", "popup/popup.css", "popup/popup.js",
   "icons/icon16.png", "icons/icon32.png", "icons/icon48.png", "icons/icon128.png"

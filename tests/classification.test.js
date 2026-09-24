@@ -45,7 +45,7 @@ test("uses three verdict rubrics and independently addresses each tweet's contex
   assert.deepEqual(request.questions.post_1_intent.criteria, INTENTS);
   assert.equal(request.questions.post_1_misleading.type, "noul");
   assert.equal(request.questions.post_1_bad_faith.type, "noul");
-  assert.match(request.questions.post_0_category.instructions.join(" "), /does not by itself make a post grift/i);
+  assert.match(request.questions.post_0_category.instructions.join(" "), /substance-first standard/i);
   assert.match(request.questions.post_1_intent.instructions[0], /posts\[1\]/);
   assert.equal(request.state.posts[1].profileDescription, "Bio");
   assert.equal(request.state.posts[1].citedOrRetweetedTweetContent, "Quote");
@@ -58,15 +58,18 @@ test("uses clear display labels without changing category keys", () => {
   assert.equal(Object.hasOwn(INTENTS, "persuade"), false);
 });
 
-test("LinkedIn uses a substance-first rubric while X retains its original definitions", () => {
+test("X and LinkedIn share a substance-first standard with platform-specific context", () => {
   const post = tweet(1, { content: "Leaders empower. Unlock your potential. Agree?" });
   const linkedin = buildRequest([post], "jev-latest", "linkedin");
   const x = buildRequest([post], "jev-latest", "x");
   assert.deepEqual(linkedin.questions.post_0_category.criteria, LINKEDIN_CATEGORIES);
   assert.deepEqual(x.questions.post_0_category.criteria, CATEGORIES);
   assert.deepEqual(Object.keys(LINKEDIN_CATEGORIES), Object.keys(CATEGORIES));
-  assert.match(linkedin.questions.post_0_category.instructions.join(" "), /substance-first LinkedIn/);
-  assert.doesNotMatch(x.questions.post_0_category.instructions.join(" "), /substance-first LinkedIn/);
+  for (const request of [linkedin, x]) {
+    assert.match(request.questions.post_0_category.instructions.join(" "), /substance-first standard/);
+  }
+  assert.match(linkedin.questions.post_0_category.instructions.join(" "), /visible job title or professional headline/);
+  assert.match(x.questions.post_0_category.instructions.join(" "), /available profile bio/);
   // Fluff must not redefine the independent deception-risk judgments.
   assert.deepEqual(linkedin.questions.post_0_misleading, x.questions.post_0_misleading);
   assert.deepEqual(linkedin.questions.post_0_bad_faith, x.questions.post_0_bad_faith);
@@ -104,10 +107,10 @@ test("shows the primary verdict and prioritizes misleading or bad-faith risk", (
 });
 
 test("only displays verdicts at or above the minimum confidence", () => {
-  assert.equal(MIN_LABEL_CONFIDENCE, 0.7);
+  assert.equal(MIN_LABEL_CONFIDENCE, 0.65);
   assert.equal(displayFor({ category: "grift" }), null);
-  assert.equal(displayFor({ ...result("grift"), confidence: 0.699 }), null);
-  assert.deepEqual(displayFor({ ...result("grift"), confidence: 0.7 }), {
+  assert.equal(displayFor({ ...result("grift"), confidence: 0.649 }), null);
+  assert.deepEqual(displayFor({ ...result("grift"), confidence: 0.65 }), {
     label: "Grift", risk: ""
   });
 });

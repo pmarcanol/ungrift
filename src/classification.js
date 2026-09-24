@@ -6,9 +6,9 @@
   "use strict";
 
   const CATEGORIES = Object.freeze({
-    grift: "The post appears designed primarily to extract attention, status, money, followers, or influence through manipulation, outrage, opportunism, or misleading presentation rather than sincere contribution.",
-    good_intent: "The post appears primarily intended to inform, help, discuss, make a sincere case, entertain honestly, or share a viewpoint without using manipulative or deceptive tactics for personal gain.",
-    unclear: "The supplied text is insufficient, mixed, mostly context-free, or plausibly fits both alternatives, so intent cannot be assessed responsibly."
+    grift: "The visible post asks for attention while delivering mostly fluff or bait: recycled wisdom, empty hot takes, status flexing, unsupported hype, insider posturing, credential-led fear pitches, sweeping doom narratives, outrage farming, promotional teasers, or engagement funnels. The main payoff is attention, authority, clicks, followers, or sales rather than useful substance or honest entertainment. Token facts, a personal anecdote, a plausible opinion, or a sincere tone do not rescue an otherwise empty pitch. An explicit sales request, provable lie, or proof of malicious intent is not required.",
+    good_intent: "The visible contribution earns attention through useful information, an explained argument, actionable advice, a concrete experience, honest entertainment, or a straightforward personal, hiring, event, or product update. Substance or honest social expression is the main payoff, not a token detail attached to self-promotion or rage bait. Brief observations, jokes, ordinary conversation, and relevant shares can qualify; mere plausibility or apparent sincerity is insufficient.",
+    unclear: "Essential context is missing or unreadable, or the visible contribution has no discernible meaning to assess, such as a bare link or an unexplained reaction to unseen media. Use this sparingly. Recognizable fluff, generic advice, and attention bait are assessable and should not receive an uncertainty pass merely because motives or linked content are unknown."
   });
   const LINKEDIN_CATEGORIES = Object.freeze({
     grift: "The visible post asks for attention while delivering mostly fluff: recycled motivational wisdom, empty thought leadership, corporate positioning, prestige-led teasers, humblebrag lessons, unsupported payoff promises, or engagement bait. The dominant payoff is visibility, authority, clicks, or leads rather than useful substance or honest entertainment. A few names, numbers, topical keywords, or obvious observations do not rescue it. An explicit sales pitch, provable lie, or proof of malicious intent is not required.",
@@ -41,7 +41,7 @@
   });
   const MISLEADING_THRESHOLD = 0.65;
   const BAD_FAITH_THRESHOLD = 0.7;
-  const MIN_LABEL_CONFIDENCE = 0.7;
+  const MIN_LABEL_CONFIDENCE = 0.65;
   const BATCH_SIZE = 8;
   const MAX_CACHE = 2000;
 

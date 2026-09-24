@@ -181,7 +181,7 @@ for (const variant of variants) {
 }
 
 test("a low-confidence verdict has no label and cannot hide its post", async (t) => {
-  const lowConfidence = { ...result("grift"), confidence: 0.69 };
+  const lowConfidence = { ...result("grift"), confidence: 0.64 };
   const feed = harness(t, variants[0], (posts) => ({ results: posts.map(() => lowConfidence) }), ["grift"]);
   await feed.settle();
   const card = feed.document.querySelector("article");

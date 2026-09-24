@@ -2,7 +2,7 @@
 
 const test = require("node:test");
 const assert = require("node:assert/strict");
-const { collectTweets, normalizeTweet } = require("../src/tweet-data.js");
+const { collectTweets, normalizeTweet, normalizeUser } = require("../src/tweet-data.js");
 
 function tweet(id, handle, description, content, extras = {}) {
   const { legacy: legacyExtras, ...topLevelExtras } = extras;
@@ -75,4 +75,34 @@ test("prefers the complete note-tweet text over the truncated legacy text", () =
   });
 
   assert.equal(normalizeTweet(longTweet).content, "The complete long-form tweet");
+});
+
+test("modern and legacy X profiles retain professional categories and supplied website destinations", () => {
+  const urls = [{ expanded_url: "https://example.com/channel" }];
+  for (const user of [
+    { core: { screen_name: "creator" }, profile_bio: { description: "Early insights", entities: { url: { urls } } } },
+    { legacy: { screen_name: "creator", description: "Early insights", entities: { url: { urls } } } }
+  ]) {
+    user.professional = { category: [{ name: "Social Media Influencer" }] };
+    assert.equal(normalizeUser({ result: user }).profileDescription,
+      "Early insights\nProfessional category: Social Media Influencer\nProfile website: https://example.com/channel");
+  }
+  assert.equal(normalizeUser({ core: { screen_name: "unknown" } }).profileDescription, null);
+});
+
+test("X article previews and quoted article previews are not reduced to bare links", () => {
+  const article = tweet("77", "publisher", "Publisher bio", "https://t.co/example", {
+    article: { article_results: { result: {
+      title: "Build an income stream with AI", preview_text: "One person, no team, huge monthly returns."
+    } } }
+  });
+  const content = "https://t.co/example\n\nArticle preview:\nBuild an income stream with AI\nOne person, no team, huge monthly returns.";
+  assert.equal(normalizeTweet(article).content, content);
+  const quote = normalizeTweet(tweet("88", "critic", "Engineer", "This promise leaves out the risks.", {
+    quoted_status_result: { result: article }
+  }));
+  assert.equal(quote.content, "This promise leaves out the risks.");
+  assert.equal(quote.profileDescription, "Engineer");
+  assert.equal(quote.quoted.content, content);
+  assert.equal(quote.quoted.profileDescription, "Publisher bio");
 });

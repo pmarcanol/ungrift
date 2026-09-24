@@ -91,3 +91,5 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   })();
   return true;
 });
+
+importScripts("annotations.js", "marker-background.js");

@@ -1,10 +1,13 @@
 {
   "manifest_version": 3,
   "name": "Ungrift",
-  "version": "0.10.0",
+  "version": "0.10.3",
   "minimum_chrome_version": "116",
   "description": "Classifies X and LinkedIn posts and adds visual privacy for recordings.",
-  "permissions": ["tabs", "storage"],
+  "permissions": [
+    "tabs",
+    "storage"
+  ],
   "host_permissions": [
     "https://x.com/*",
     "https://twitter.com/*",
@@ -31,8 +34,14 @@
   },
   "content_scripts": [
     {
-      "matches": ["https://x.com/*", "https://twitter.com/*"],
-      "js": ["src/tweet-data.js", "src/main-world.js"],
+      "matches": [
+        "https://x.com/*",
+        "https://twitter.com/*"
+      ],
+      "js": [
+        "src/tweet-data.js",
+        "src/main-world.js"
+      ],
       "run_at": "document_start",
       "world": "MAIN"
     },
@@ -43,7 +52,13 @@
         "https://www.linkedin.com/*",
         "https://linkedin.com/*"
       ],
-      "js": ["src/classification.js", "src/linkedin-data.js", "src/content.js", "src/privacy.js"],
+      "js": [
+        "src/classification.js",
+        "src/linkedin-data.js",
+        "src/marker.js",
+        "src/content.js",
+        "src/privacy.js"
+      ],
       "run_at": "document_start"
     }
   ]

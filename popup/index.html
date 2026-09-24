@@ -16,6 +16,13 @@
     </header>
 
     <main>
+      <section aria-labelledby="marking-heading">
+        <div class="section-heading"><h2 id="marking-heading">Your training labels</h2><span id="marked-count">0 saved</span></div>
+        <p class="section-copy">Mark posts as slop, grift, or value. Saved locally with the post text, author context, and model verdict.</p>
+        <label class="marking-toggle"><span>Click posts to mark them</span><input id="marking-mode" type="checkbox" /></label>
+        <div class="marking-export"><span id="label-counts">0 slop · 0 grift · 0 value</span><button id="export-labels" type="button" disabled>Export JSON</button></div>
+        <p id="marking-status" class="section-copy" role="status">Labels autosave in Chrome. Export to save a JSON file.</p>
+      </section>
       <section aria-labelledby="filter-heading">
         <div class="section-heading">
           <h2 id="filter-heading">Hidden categories</h2>
@@ -80,5 +87,7 @@
     </main>
 
     <script src="popup.js"></script>
+    <script src="../src/annotations.js"></script>
+    <script src="marker-popup.js"></script>
   </body>
 </html>

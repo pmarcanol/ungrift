@@ -317,6 +317,7 @@
   // Their adapters differ only in how they find the post and its evidence.
   function classifyAndAnnotate(card, key, context, badgeHost) {
     const classification = classifier.get(context);
+    globalThis.UngriftMarker?.register(card, key, context, classification);
     const annotation = annotatePost(card, key, context.handle, classification, badgeHost);
     const displayedCategory = displayFor(classification) ? classification.category : null;
     const isHidden = Boolean(displayedCategory && hiddenCategories.has(displayedCategory));

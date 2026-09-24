@@ -1,6 +1,6 @@
 # Ungrift
 
-Ungrift is a dependency-free Chrome extension that labels posts as you scroll, lets you hide behavioral categories, and can visually anonymize posters on your **X and LinkedIn feeds** while you record. Settings live in a compact toolbar popover; Ungrift does not display or export the underlying post data.
+Ungrift is a dependency-free Chrome extension that labels posts as you scroll, lets you hide behavioral categories, and can visually anonymize posters on your **X and LinkedIn feeds** while you record. Settings live in a compact toolbar popover. An optional post marker lets you collect your own labels and export a local JSON dataset.
 
 The extension makes **zero additional requests to X or LinkedIn**. On X, it reads rendered post cards and passively inspects timeline responses the page already requested. On LinkedIn, it reads only the post cards already rendered in the page. Classification batches go directly from the extension background worker to TypeSafe's Jev API.
 
@@ -10,11 +10,11 @@ Ungrift makes one primary three-way verdict for each post. **Unclear** is used w
 
 | Badge | Machine key | Meaning |
 | --- | --- | --- |
-| **Grift** | `grift` | Appears primarily designed to extract attention, status, money, followers, or influence through manipulation, opportunism, or deceptive presentation. |
-| **Good intent** | `good_intent` | Appears to be a sincere attempt to inform, help, discuss, make a case, entertain, or share a viewpoint without deceptive tactics for personal gain. |
-| **Unclear** | `unclear` | The available text is insufficient, mixed, or too dependent on missing context to assess responsibly. |
+| **Grift** | `grift` | Primarily delivers fluff, hype, empty positioning, or attention bait. A provable lie or explicit sales pitch is not required. |
+| **Good intent** | `good_intent` | Earns attention through useful substance, an explained viewpoint, a concrete update, honest entertainment, or ordinary social expression. Sincerity alone is insufficient. |
+| **Unclear** | `unclear` | Essential context is missing or the contribution is uninterpretable. Recognizable fluff does not receive an uncertainty pass. |
 
-Badges update beside the author when a classification reaches at least 70% confidence. Lower-confidence verdicts remain unlabeled and visible. Badge tooltips include the page-session post number, model confidence, and category definition. If either site unmounts and later remounts the same post, its number and cached classification are reused.
+Badges update beside the author when a classification reaches at least 65% confidence. Lower-confidence verdicts remain unlabeled and visible. Badge tooltips include the page-session post number, model confidence, and category definition. If either site unmounts and later remounts the same post, its number and cached classification are reused.
 
 ### Intent and integrity signals
 
@@ -36,11 +36,21 @@ The badge always leads with the verdict. When the integrity signals cross the co
 5. Save your Jev API key. It stays in this Chrome profile and is never synced.
 6. Switch on any categories you want hidden, then open or reload `https://x.com/home` or `https://www.linkedin.com/feed/`.
 
-Filter choices persist and are broadcast to every open X and LinkedIn tab. Matching cards disappear only when their classification reaches the 70% display threshold. Low-confidence, pending, unavailable, and failed classifications remain visible. **Show all categories** clears all filters, and **Retry** restarts failed classification batches in open feed tabs.
+Filter choices persist and are broadcast to every open X and LinkedIn tab. Matching cards disappear only when their classification reaches the 65% display threshold. Low-confidence, pending, unavailable, and failed classifications remain visible. **Show all categories** clears all filters, and **Retry** restarts failed classification batches in open feed tabs.
 
 ### Recording privacy
 
 Switch on **Anonymize posters** to show only each poster's first name, replace X handles with a neutral placeholder, and replace profile photos with a neutral silhouette on X and LinkedIn. The effect is purely presentational: switching it off restores the original page immediately, and Ungrift does not rewrite post data or images at the source. The preference is stored only in the current Chrome profile and is applied to open social tabs without a reload.
+
+## Mark your own posts
+
+Open Ungrift and enable **Click posts to mark them**. Click any rendered X or LinkedIn post, optionally explain your reasoning, then choose **Slop**, **Grift**, or **Value**. These are your manual labels, independent of the model's categories. Click a labeled post again to change its label or note, or choose **Remove label**. Click **Done** to return to normal browsing.
+
+While marking, clicks inside posts select them instead of opening links or triggering feed actions. Filtered posts are temporarily shown so you can review mistakes; your filters resume when marking ends. A green edge identifies saved posts. Marking works without an API key, including when classification is pending or unavailable.
+
+Labels autosave in this Chrome profile and survive tab reloads and browser restarts. **Export JSON** downloads `ungrift-labels-<timestamp>.json`; export again after adding more labels. The file contains a versioned `annotations` array with your label and note, full available extracted text, quote/repost text, original author and bio/job title, post identity and permalink when available, timestamps, extension version, model result, and the text input used by the classifier. Missing model results and unavailable permalinks remain explicit. Some LinkedIn layouts expose only a card key. Linked destinations and media are not fetched or added to this dataset.
+
+Exports contain the original author context even when recording privacy visually masks it. They contain no API key. The marker does not send your manual labels to a server or automatically change the rubric. Save the JSON for later pattern analysis and criteria refinement. Browser storage is the working copy; keep exported files as backups before removing the extension or clearing its data.
 
 ## How it works
 
@@ -49,7 +59,7 @@ Switch on **Anonymize posters** to show only each poster's first name, replace X
 - Each card receives a stable session number, DOM element ID, and inline category badge.
 - Posts are collected into batches of up to eight. Four independent questions per post run together in one Jev request.
 - Returned results immediately refresh the badge, category attribute, hide/show decision, and internal classification status together.
-- No auto-scroll, social-network API client, background feed polling, profile lookup, analytics, or post-data display is included.
+- No auto-scroll, social-network API client, background feed polling, profile lookup, or analytics is included.
 
 The classifier uses post text, author identity, the available profile bio or LinkedIn headline, and quoted or reshared text as context. Post and referenced text are capped at 6,000 characters each and profile context at 1,600. These are AI assessments of the available contribution, not verified facts about an author.
 
@@ -66,6 +76,12 @@ The rubric distinguishes signup logistics from engagement funnels and explained 
 For LinkedIn shares with commentary, the sharer's words are the primary contribution and the embedded original is separate reference context. For a plain repost, the original text and original author's available context are assessed. Embedded posts do not receive a second feed entry or badge; nested quotes cannot replace the immediate original's text or author.
 
 The API key is stored in `chrome.storage.local` with access restricted to trusted extension pages. It is never sent to X or LinkedIn or exposed to content scripts. Classification results are cached in memory for up to 2,000 contexts; changing the post text, profile context, or referenced text causes reclassification.
+
+When supplied by X, profile context also includes the professional category and expanded profile-website URL. Article cards include their supplied title and preview instead of being reduced to a shortened link; quoted article previews remain separate from the quoting author's words. These fields are read from existing responses, without fetching profile links or article bodies.
+
+X uses the same core substance-first instructions, with additional guidance for empty hot takes, hustle aphorisms, insider rumor hype, and outrage farming. Brief jokes, personal anecdotes, ordinary conversation, and explained disagreements can still earn **Good intent**. A reaction whose meaning depends on unseen media remains **Unclear**. Bio context informs the assessment but cannot rescue empty content or condemn useful content by itself.
+
+`tests/fixtures/x-rubric.json` adds 20 X calibration cases for hype, outrage bait, generic wisdom, practical help, honest humor, ordinary conversation, and quoted or missing context. They also distinguish sweeping doom narratives, credential-led fear pitches, and effortless-income article teasers from grounded complaints, substantive risk explanations, and useful posts by promotional accounts.
 
 ## Development
 
@@ -89,6 +105,9 @@ src/main-world.js          Observes X's existing timeline responses
 src/tweet-data.js          Normalizes X response objects
 src/linkedin-data.js       Finds and normalizes rendered LinkedIn posts
 src/content.js             Labels and filters rendered post cards
+src/marker.js              Click-to-label controls in the feed
+src/annotations.js         Manual annotation schema and JSON export
+src/marker-background.js   Authorized, serialized local annotation storage
 src/privacy.js             Visually anonymizes X and LinkedIn post authors
 src/background.js          Stores settings and brokers Jev requests
 src/classification.js      Rubrics, display labels, batching, and cache
